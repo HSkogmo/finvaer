@@ -2,32 +2,21 @@
 
 class Filter {
 	
+
 	function get_top_3_warmest_places( $places )
 	{
-
-		$result = array();
-
-		foreach($places as $key => $place)
+		
+		function compare_temp($a,$b)
 		{
-			if(count($result) == 3)
-			{
-				usort($result, function($a, $b) {
-   					return $a['temperature'] - $b['temperature'];
-   				});
-
-   				for($i = 2; $i != 0; $i--) {
-   					if($result[$i]['temperature'] < $place['temperature'])
-   					{
-   						$result[$i] = $places[$key];
-   					}
-   				}
-			}
-			else
-			{
-				$result[] = $place;
-			}
+			if($a['temperature'] == $b['temperature']) return 0;
+			return ($a['temperature'] < $b['temperature']) ? 1 : -1;
 		}
 
+		usort($places, 'compare_temp');
+
+		$result = array_splice($places, 0, 3);
+
 		return $result;
+
 	}
 }
